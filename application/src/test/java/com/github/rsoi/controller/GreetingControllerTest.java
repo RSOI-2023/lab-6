@@ -27,13 +27,13 @@ class GreetingControllerTest {
     @Test
     void getGreetingById() throws Exception {
         mockMvc
-                // making a request "GET http://localhost:8080/greetings?greetingId=1"
+                // посылаем запрос вида "GET http://localhost:8080/greetings?greetingId=1"
                 .perform(get("/greetings").param("greetingId", "1"))
-                // print some additional information to console (not necessary)
+                // выводим информацию о запросе и ответе в консоль (можно не выводить, это сделано для красоты)
                 .andDo(print())
-                // expect HTTP status 200
+                // ожидаем HTTP код 200
                 .andExpect(status().isOk())
-                // and also expect "Hello world from Spring Service Bean!" in the response
+                // и также ожидаем сообщение "Hello world from Spring Service Bean!" в ответе
                 .andExpect(content().string(containsString("Hello world from Spring Service Bean!")));
     }
 
@@ -41,7 +41,7 @@ class GreetingControllerTest {
     void createGreeting() throws Exception {
         var testGreeting = new CreateGreetingRequest("Hi, my name is Test Greeting");
 
-        // send POST request with body
+        // отправляем POST запрос с объектом, который нужно создать
         MvcResult createdGreetingResponse =
                 mockMvc.perform(post("/greetings")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -50,19 +50,35 @@ class GreetingControllerTest {
                         .andExpect(status().isOk())
                         .andReturn();
 
-        // parse response into java object
+        // контроллер возвращает json, который нужно превратить в java-объект
         GreetingResponse createdGreeting = new ObjectMapper()
                 .readerFor(GreetingResponse.class)
                 .readValue(createdGreetingResponse.getResponse().getContentAsString());
 
-        // check if created entity actually exists in DB
+        // Проверяем, что созданный объект действительно создался и мы можем его получить GET-запросом
         mockMvc.perform(get("/greetings").param("greetingId", String.valueOf(createdGreeting.getId())))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(createdGreeting.getText())));
     }
 
-    // Util method. Just shows how to clean up code
+    @Test
+    void getNotFoundException() throws Exception {
+        mockMvc
+                // пытаемся получить несуществующую запись
+                .perform(get("/greetings").param("greetingId", "9999999"))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+    @Test
+    void getInternalServerError() throws Exception {
+        mockMvc
+                // посылаем некорректный запрос
+                .perform(get("/greetings").param("greetingId", "a"))
+                .andDo(print())
+                .andExpect(status().isInternalServerError());
+    }
+    // вспомогательный метод (util method)
     public static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
