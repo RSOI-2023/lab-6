@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'application'
+    id 'org.springframework.boot' version '3.0.2'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'jacoco'
+}
+
+group = 'com.github.rsoi'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+    testImplementation platform('org.junit:junit-bom:5.9.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.2'
+
+
+    implementation 'org.springframework.boot:spring-boot-starter:3.0.2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.2'
+    implementation 'com.h2database:h2:2.1.214'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.0.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    mainClassName('com.github.rsoi.SpringBootWebApplication')
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    reports {
+        csv.enabled true
+        xml.required = true
+        csv.required = true
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+
+}
