@@ -7,8 +7,8 @@
 
 Шаги выполнения: 
 1) Обновить ваш проект с предыдущих лабораторных в соответствии с файлами из данного репозитория
-   * заменить конфигурацию gradle
-   * поместить файл application/src/main/resources/lombok.config в соответствующую папку вашего проекта
+   * заменить конфигурацию вашу gradle на ту, что лежит в файле [build.gradle](application/build.gradle) проекта 
+   * поместить [файл](application/src/main/resources/lombok.config) в соответствующую папку вашего проекта
 2) Создать классы и методы для написания тестов.
 3) Написать код тестов придерживаясь стиля GWT. Примеры можно найти в данном репозитории по пути application/src/test/java
 4) Запустить проверку покрытия jacoco с помощью команды в консоли:
@@ -19,8 +19,9 @@ gradlew jacocoTestReport
 ![img.png](img.png)
 
 Рассчитанные метрики можно посмотреть открыв файл application/build/jacocoHtml/index.html
-в браузере.
-5) Сдать лабораторную  
+в браузере. Данный файл создаётся только после запуска проверки покрытия jacoco.
+
 
 # Полезные ссылки
-Что такое GWT (En): https://proandroiddev.com/given-when-then-our-testing-approach-c9087b291c36
+* Что так покрытие кода (Ru): https://habr.com/ru/post/345774/
+* Что такое GWT (En): https://proandroiddev.com/given-when-then-our-testing-approach-c9087b291c36
